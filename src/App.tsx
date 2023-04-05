@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./App.css";
 import { ILogin, login } from "./actions/authActions";
-import { useAppDispatch } from "./store";
-import { useGetAllUserQuery } from "./services/authService";
+import { useGetAllUserQuery, useGetByIdMutation } from "./services/authService";
+import { selectToken } from "./slice/auth.slice";
+import { useAppDispatch, useAppSelector } from "./store";
 
 function App() {
   const [formData, setFormData] = useState<ILogin>();
@@ -11,15 +12,20 @@ function App() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (formData) {
-      dispatch(login());
+      dispatch(login(formData));
     }
   };
+  const token = useAppSelector(selectToken);
 
-  const { data, isFetching } = useGetAllUserQuery("userDetails", {
-    skip: !localStorage.getItem("token"),
+  const { data } = useGetAllUserQuery("userDetails", {
+    skip: !token,
   });
 
-  console.log(data);
+  const [getByIdMutation] = useGetByIdMutation();
+  const getById = async () => {
+    const data1 = await getByIdMutation("1").unwrap();
+    console.log(data1);
+  };
 
   return (
     <div className="App">
@@ -39,6 +45,10 @@ function App() {
           }
         />
         <button type="submit">submit</button>
+        <br />
+        <button type="button" onClick={getById}>
+          getById
+        </button>
       </form>
     </div>
   );

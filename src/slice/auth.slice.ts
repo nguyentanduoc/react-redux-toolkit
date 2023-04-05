@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { login } from "../actions/authActions";
+import { RootState } from "../store";
 
 interface AuthSliceType {
   loading: boolean;
@@ -35,5 +36,7 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const selectToken = (state: RootState) => state.auth.userToken;
 
 export default authSlice.reducer;

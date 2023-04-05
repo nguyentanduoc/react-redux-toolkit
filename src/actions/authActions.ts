@@ -9,15 +9,12 @@ export interface ILogin {
   password?: string;
 }
 
-export const login = createAsyncThunk("/auth/login", async (_, thunkAPI) => {
-  const response = await http.post<AuthResponse>(
-    "/auth/login",
-    { username: "admin", password: "admin" },
-    {
+export const login = createAsyncThunk<AuthResponse, ILogin>(
+  "/auth/login",
+  async (data, thunkAPI) => {
+    const response = await http.post<AuthResponse>("/auth/login", data, {
       signal: thunkAPI.signal,
-    }
-  );
-  console.log(response.data);
-  localStorage.setItem("token", response.data.token);
-  return response.data;
-});
+    });
+    return response.data;
+  }
+);

@@ -1,17 +1,24 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import axiosBaseQuery from "../utils/axiosBaseQuery";
 
+interface IUser {
+  id: string;
+  username: string;
+}
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: axiosBaseQuery(),
+  baseQuery: axiosBaseQuery({ baseUrl: "/employee" }),
   endpoints: (builder) => ({
     getAllUser: builder.query({
       query: () => ({
-        url: "/employee/getAll",
+        url: "/getAll",
         method: "GET",
       }),
+    }),
+    getById: builder.mutation<IUser, string>({
+      query: (id: string) => ({ url: `/${id}`, method: "GET" }),
     }),
   }),
 });
 
-export const { useGetAllUserQuery } = authApi;
+export const { useGetAllUserQuery, useGetByIdMutation } = authApi;
