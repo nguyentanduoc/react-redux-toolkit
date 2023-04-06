@@ -1,19 +1,22 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-
-import { store } from './store'
-import { Provider } from 'react-redux'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { PersistGate } from "redux-persist/integration/react";
+import { persister, store } from "./store";
+import { Provider } from "react-redux";
+import FullscreenProgress from "./FullscreenProgress";
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <PersistGate loading={<FullscreenProgress />} persistor={persister}>
+        <App />
+      </PersistGate>
     </Provider>
   </React.StrictMode>
 );

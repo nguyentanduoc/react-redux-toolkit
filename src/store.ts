@@ -1,19 +1,34 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authSlice from "./slice/auth.slice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import {
+  FLUSH,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+  REHYDRATE,
+  persistStore,
+} from "redux-persist";
 import { authApi } from "./services/authService";
-import { loadingMiddleware } from "./utils/loadingMiddleware";
+import authSlice, { authReducer } from "./slice/auth.slice";
 import spinningSlide from "./slice/spinningSlide";
+import { loadingMiddleware } from "./utils/loadingMiddleware";
 
 export const store = configureStore({
   reducer: {
-    auth: authSlice,
     spinning: spinningSlide,
+    [authSlice.name]: authReducer,
     [authApi.reducerPath]: authApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat([authApi.middleware, loadingMiddleware]),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat([authApi.middleware, loadingMiddleware]),
 });
+
+export const persister = persistStore(store);
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;

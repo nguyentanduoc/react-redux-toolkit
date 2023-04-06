@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { login } from "../actions/authActions";
 import { RootState } from "../store";
+import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 interface AuthSliceType {
   loading: boolean;
@@ -23,7 +25,8 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action) => {
       state.userToken = action.payload;
-    }
+    },
+    logout: () => initialState,
   },
   extraReducers(builder) {
     builder
@@ -35,12 +38,20 @@ const authSlice = createSlice({
         state.loading = false;
         state.userToken = action.payload?.token;
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state) => {
         state.loading = false;
       });
   },
 });
 
 export const selectToken = (state: RootState) => state.auth.userToken;
-export const { setToken } = authSlice.actions;
-export default authSlice.reducer;
+export const { setToken, logout } = authSlice.actions;
+export const authReducer = persistReducer(
+  {
+    key: "rtk:auth",
+    storage,
+    whitelist: ["userToken"],
+  },
+  authSlice.reducer
+);
+export default authSlice;

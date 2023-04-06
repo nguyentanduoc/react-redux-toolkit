@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./App.css";
+import SpingningComponent from "./SpingningComponent";
 import { ILogin, login } from "./actions/authActions";
 import { useGetAllUserQuery, useGetByIdMutation } from "./services/authService";
 import { selectToken } from "./slice/auth.slice";
 import { useAppDispatch, useAppSelector } from "./store";
-import SpingningComponent from "./SpingningComponent";
 
 function App() {
   const [formData, setFormData] = useState<ILogin>();
@@ -30,7 +30,6 @@ function App() {
 
   return (
     <div className="App">
-      <SpingningComponent/>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">username</label>
         <input
@@ -52,6 +51,7 @@ function App() {
           getById
         </button>
       </form>
+      <SpingningComponent />
     </div>
   );
 }

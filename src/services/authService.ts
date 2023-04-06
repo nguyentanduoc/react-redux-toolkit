@@ -5,8 +5,10 @@ interface IUser {
   id: string;
   username: string;
 }
+export const AUTH_API_REDUCER_KEY = "authApi";
+
 export const authApi = createApi({
-  reducerPath: "authApi",
+  reducerPath: AUTH_API_REDUCER_KEY,
   baseQuery: axiosBaseQuery({ baseUrl: "/employee" }),
   endpoints: (builder) => ({
     getAllUser: builder.query({
